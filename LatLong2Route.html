@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+		<meta charset="utf-8">
+		<title>LatLong2Route</title>
+		<link href="https://google-developers.appspot.com/maps/documentation/javascript/examples/default.css" rel="stylesheet">
+		<script src="https://maps.googleapis.com/maps/api/js?v=3&"></script>
+		<script>
+			var directionsDisplay;
+			var directionsService = new google.maps.DirectionsService();
+			var map;
+			
+			var locations = [
+				{location: {lat: 33.240152, lng: -117.413376}},
+				{location: {lat: 33.218567, lng: -117.391109}},
+				{location: {lat: 33.200618, lng: -117.373434}},
+				{location: {lat: 33.179734, lng: -117.353651}},
+				{location: {lat: 33.151704, lng: -117.336331}},
+				{location: {lat: 33.122973, lng: -117.322702}},
+				{location: {lat: 33.101626, lng: -117.309439}},
+				{location: {lat: 33.073371, lng: -117.294873}},
+				{location: {lat: 33.048438, lng: -117.287351}},
+				{location: {lat: 33.02625, lng: -117.274915}},
+				{location: {lat: 33.005424, lng: -117.259314}},
+				{location: {lat: 32.979922, lng: -117.253241}},
+				{location: {lat: 32.952468, lng: -117.244298}},
+				{location: {lat: 32.930855, lng: -117.241058}},
+				{location: {lat: 32.911761, lng: -117.228812}},
+				{location: {lat: 32.888676, lng: -117.2277}},
+				{location: {lat: 32.864527, lng: -117.230028}},
+				{location: {lat: 32.836089, lng: -117.234107}},
+				{location: {lat: 32.807702, lng: -117.216754}},
+				{location: {lat: 32.779286, lng: -117.2086}},
+				{location: {lat: 32.749919, lng: -117.196234}},
+				{location: {lat: 32.735815, lng: -117.175452}},
+				{location: {lat: 32.723898, lng: -117.156068}},
+				{location: {lat: 32.7062, lng: -117.147722}},
+				{location: {lat: 32.694108, lng: -117.124841}},
+				{location: {lat: 32.671761, lng: -117.111234}},
+				{location: {lat: 32.642724, lng: -117.101267}},
+				{location: {lat: 32.621946, lng: -117.093171}},
+				{location: {lat: 32.593819, lng: -117.088714}},
+				{location: {lat: 32.568952, lng: -117.076731}},
+				{location: {lat: 32.551447, lng: -117.045806}}
+			];
+
+			function initialize() {
+				directionsDisplay = new google.maps.DirectionsRenderer({
+					markerOptions: {
+						icon: {
+							url: "marker.png",
+							anchor: {x: 6, y: 6}
+						}
+					}
+				});
+
+				var mapOptions = {
+					zoom: 7,
+					mapTypeId: google.maps.MapTypeId.ROADMAP,
+					center: locations[Math.floor(locations.length / 2) + 1]
+				};
+				map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+				directionsDisplay.setMap(map);
+
+				var start = locations[0].location;
+				var end = locations[locations.length-1].location;
+				var wp = [];
+				for(var i=1;i < locations.length-1; i++){
+					wp.push(locations[i]);
+				}
+
+				var request = {
+					origin: start,
+					destination: end,
+					// Use the waypoints parameter with some of the locations if you want to ensure that the route goes through all
+					waypoints: [wp[20]],
+					travelMode: google.maps.DirectionsTravelMode.DRIVING
+				};
+				directionsService.route(request, function(response, status) {
+					if (status == google.maps.DirectionsStatus.OK) {
+						directionsDisplay.setDirections(response);
+					}
+				});
+				
+				for(var i=0; i < wp.length; i++){
+					new google.maps.Marker({
+						position: wp[i].location,
+						map: map,
+						icon: {
+							url: "marker.png",
+							anchor: {x: 6, y: 6}
+						}
+					});
+				}
+			}
+
+			google.maps.event.addDomListener(window, 'load', initialize);
+		</script>
+	</head>
+	<body>
+		<div id="map-canvas"></div>
+	</body>
+</html>
